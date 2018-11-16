@@ -1,0 +1,25 @@
+﻿<Window x:Class="Менеждер_заказов.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Менеждер_заказов"
+        xmlns:advanced="clr-namespace:Менеждер_заказов.Project"
+        mc:Ignorable="d"
+        Title="Менеджер заказов" Height="450" Width="800" Icon="MOIcon.ico">
+    <TabControl x:Name="ProjectTC">
+        <TabItem Background="White" BorderBrush="White">
+             <TabItem.Header >
+                <Button Height="30" Width="30" Background="White" BorderBrush="White" Click="AddBtn_Click">
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Проекты" Click="AddBtnMenuProjecItem_Click"></MenuItem>
+                            <MenuItem Header="Персоны" Click="AddBtnMenuPersonItem_Click"></MenuItem>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                    <Image Source="Picture/add.png"/>
+                </Button>
+            </TabItem.Header>
+        </TabItem>
+    </TabControl>
+</Window>

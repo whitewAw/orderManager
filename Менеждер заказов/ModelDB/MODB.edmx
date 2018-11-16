@@ -1,0 +1,568 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище MODBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CompletionStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Picture" Type="nvarchar" MaxLength="256" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="32" />
+          <Property Name="Name" Type="nvarchar" MaxLength="32" />
+          <Property Name="Patronymic" Type="nvarchar" MaxLength="32" />
+          <Property Name="Address" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="Performer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Picture" Type="nvarchar" MaxLength="256" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="32" />
+          <Property Name="Name" Type="nvarchar" MaxLength="32" />
+          <Property Name="Patronymic" Type="nvarchar" MaxLength="32" />
+          <Property Name="Contact" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Deadline" Type="datetime2" Precision="0" />
+          <Property Name="PlannedBudget" Type="int" />
+          <Property Name="ActualBudget" Type="int" />
+          <Property Name="idOrder" Type="int" Nullable="false" />
+          <Property Name="idStatus" Type="int" Nullable="false" />
+          <Property Name="idPerformer" Type="int" />
+        </EntityType>
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Deadline" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="idStatus" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="48" />
+        </EntityType>
+        <EntityType Name="TaskPerformers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idTask" Type="int" Nullable="false" />
+          <Property Name="idPerformer" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TasksInTheProject">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idProject" Type="int" Nullable="false" />
+          <Property Name="idTask" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Project_CompletionStatus">
+          <End Role="CompletionStatus" Type="Self.CompletionStatus" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompletionStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="idStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Project_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="idOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Project_Performer">
+          <End Role="Performer" Type="Self.Performer" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Performer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="idPerformer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Task_CompletionStatus">
+          <End Role="CompletionStatus" Type="Self.CompletionStatus" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompletionStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="idStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskPerformers_Performer">
+          <End Role="Performer" Type="Self.Performer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaskPerformers" Type="Self.TaskPerformers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Performer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskPerformers">
+              <PropertyRef Name="idPerformer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskPerformers_Task">
+          <End Role="Task" Type="Self.Task" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaskPerformers" Type="Self.TaskPerformers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskPerformers">
+              <PropertyRef Name="idTask" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TasksInTheProject_Order">
+          <End Role="Task" Type="Self.Task" Multiplicity="1" />
+          <End Role="TasksInTheProject" Type="Self.TasksInTheProject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TasksInTheProject">
+              <PropertyRef Name="idTask" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TasksInTheProject_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TasksInTheProject" Type="Self.TasksInTheProject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TasksInTheProject">
+              <PropertyRef Name="idProject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище MODBModelContainer">
+          <EntitySet Name="CompletionStatus" EntityType="Self.CompletionStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Performer" EntityType="Self.Performer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Task" EntityType="Self.Task" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaskPerformers" EntityType="Self.TaskPerformers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TasksInTheProject" EntityType="Self.TasksInTheProject" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Project_CompletionStatus" Association="Self.FK_Project_CompletionStatus">
+            <End Role="CompletionStatus" EntitySet="CompletionStatus" />
+            <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Project_Order" Association="Self.FK_Project_Order">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Project_Performer" Association="Self.FK_Project_Performer">
+            <End Role="Performer" EntitySet="Performer" />
+            <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Task_CompletionStatus" Association="Self.FK_Task_CompletionStatus">
+            <End Role="CompletionStatus" EntitySet="CompletionStatus" />
+            <End Role="Task" EntitySet="Task" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskPerformers_Performer" Association="Self.FK_TaskPerformers_Performer">
+            <End Role="Performer" EntitySet="Performer" />
+            <End Role="TaskPerformers" EntitySet="TaskPerformers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskPerformers_Task" Association="Self.FK_TaskPerformers_Task">
+            <End Role="Task" EntitySet="Task" />
+            <End Role="TaskPerformers" EntitySet="TaskPerformers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TasksInTheProject_Order" Association="Self.FK_TasksInTheProject_Order">
+            <End Role="Task" EntitySet="Task" />
+            <End Role="TasksInTheProject" EntitySet="TasksInTheProject" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TasksInTheProject_Project" Association="Self.FK_TasksInTheProject_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="TasksInTheProject" EntitySet="TasksInTheProject" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MODBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CompletionStatu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Projects" Relationship="Self.FK_Project_CompletionStatus" FromRole="CompletionStatus" ToRole="Project" />
+          <NavigationProperty Name="Tasks" Relationship="Self.FK_Task_CompletionStatus" FromRole="CompletionStatus" ToRole="Task" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Picture" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Patronymic" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Projects" Relationship="Self.FK_Project_Order" FromRole="Order" ToRole="Project" />
+        </EntityType>
+        <EntityType Name="Performer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Picture" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Patronymic" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="Contact" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Projects" Relationship="Self.FK_Project_Performer" FromRole="Performer" ToRole="Project" />
+          <NavigationProperty Name="TaskPerformers" Relationship="Self.FK_TaskPerformers_Performer" FromRole="Performer" ToRole="TaskPerformers" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Deadline" Type="DateTime" Precision="0" />
+          <Property Name="PlannedBudget" Type="Int32" />
+          <Property Name="ActualBudget" Type="Int32" />
+          <Property Name="idOrder" Type="Int32" Nullable="false" />
+          <Property Name="idStatus" Type="Int32" Nullable="false" />
+          <Property Name="idPerformer" Type="Int32" />
+          <NavigationProperty Name="CompletionStatu" Relationship="Self.FK_Project_CompletionStatus" FromRole="Project" ToRole="CompletionStatus" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Project_Order" FromRole="Project" ToRole="Order" />
+          <NavigationProperty Name="Performer" Relationship="Self.FK_Project_Performer" FromRole="Project" ToRole="Performer" />
+          <NavigationProperty Name="TasksInTheProjects" Relationship="Self.FK_TasksInTheProject_Project" FromRole="Project" ToRole="TasksInTheProject" />
+        </EntityType>
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Deadline" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="idStatus" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="48" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CompletionStatu" Relationship="Self.FK_Task_CompletionStatus" FromRole="Task" ToRole="CompletionStatus" />
+          <NavigationProperty Name="TaskPerformers" Relationship="Self.FK_TaskPerformers_Task" FromRole="Task" ToRole="TaskPerformers" />
+          <NavigationProperty Name="TasksInTheProjects" Relationship="Self.FK_TasksInTheProject_Order" FromRole="Task" ToRole="TasksInTheProject" />
+        </EntityType>
+        <EntityType Name="TaskPerformer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idTask" Type="Int32" Nullable="false" />
+          <Property Name="idPerformer" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Performer" Relationship="Self.FK_TaskPerformers_Performer" FromRole="TaskPerformers" ToRole="Performer" />
+          <NavigationProperty Name="Task" Relationship="Self.FK_TaskPerformers_Task" FromRole="TaskPerformers" ToRole="Task" />
+        </EntityType>
+        <EntityType Name="TasksInTheProject">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idProject" Type="Int32" Nullable="false" />
+          <Property Name="idTask" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Project" Relationship="Self.FK_TasksInTheProject_Project" FromRole="TasksInTheProject" ToRole="Project" />
+          <NavigationProperty Name="Task" Relationship="Self.FK_TasksInTheProject_Order" FromRole="TasksInTheProject" ToRole="Task" />
+        </EntityType>
+        <Association Name="FK_Project_CompletionStatus">
+          <End Role="CompletionStatus" Type="Self.CompletionStatu" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompletionStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="idStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Task_CompletionStatus">
+          <End Role="CompletionStatus" Type="Self.CompletionStatu" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Task" Type="Self.Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompletionStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="idStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Project_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="idOrder" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Project_Performer">
+          <End Role="Performer" Type="Self.Performer" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Performer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="idPerformer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskPerformers_Performer">
+          <End Role="Performer" Type="Self.Performer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaskPerformers" Type="Self.TaskPerformer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Performer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskPerformers">
+              <PropertyRef Name="idPerformer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TasksInTheProject_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TasksInTheProject" Type="Self.TasksInTheProject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TasksInTheProject">
+              <PropertyRef Name="idProject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskPerformers_Task">
+          <End Role="Task" Type="Self.Task" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaskPerformers" Type="Self.TaskPerformer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskPerformers">
+              <PropertyRef Name="idTask" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TasksInTheProject_Order">
+          <End Role="Task" Type="Self.Task" Multiplicity="1" />
+          <End Role="TasksInTheProject" Type="Self.TasksInTheProject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TasksInTheProject">
+              <PropertyRef Name="idTask" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MODBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CompletionStatus" EntityType="Self.CompletionStatu" />
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="Performers" EntityType="Self.Performer" />
+          <EntitySet Name="Projects" EntityType="Self.Project" />
+          <EntitySet Name="Tasks" EntityType="Self.Task" />
+          <EntitySet Name="TaskPerformers" EntityType="Self.TaskPerformer" />
+          <EntitySet Name="TasksInTheProjects" EntityType="Self.TasksInTheProject" />
+          <AssociationSet Name="FK_Project_CompletionStatus" Association="Self.FK_Project_CompletionStatus">
+            <End Role="CompletionStatus" EntitySet="CompletionStatus" />
+            <End Role="Project" EntitySet="Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Task_CompletionStatus" Association="Self.FK_Task_CompletionStatus">
+            <End Role="CompletionStatus" EntitySet="CompletionStatus" />
+            <End Role="Task" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Project_Order" Association="Self.FK_Project_Order">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="Project" EntitySet="Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Project_Performer" Association="Self.FK_Project_Performer">
+            <End Role="Performer" EntitySet="Performers" />
+            <End Role="Project" EntitySet="Projects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskPerformers_Performer" Association="Self.FK_TaskPerformers_Performer">
+            <End Role="Performer" EntitySet="Performers" />
+            <End Role="TaskPerformers" EntitySet="TaskPerformers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TasksInTheProject_Project" Association="Self.FK_TasksInTheProject_Project">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="TasksInTheProject" EntitySet="TasksInTheProjects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskPerformers_Task" Association="Self.FK_TaskPerformers_Task">
+            <End Role="Task" EntitySet="Tasks" />
+            <End Role="TaskPerformers" EntitySet="TaskPerformers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TasksInTheProject_Order" Association="Self.FK_TasksInTheProject_Order">
+            <End Role="Task" EntitySet="Tasks" />
+            <End Role="TasksInTheProject" EntitySet="TasksInTheProjects" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище MODBModelContainer" CdmEntityContainer="MODBEntities">
+          <EntitySetMapping Name="CompletionStatus">
+            <EntityTypeMapping TypeName="MODBModel.CompletionStatu">
+              <MappingFragment StoreEntitySet="CompletionStatus">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="MODBModel.Order">
+              <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Performers">
+            <EntityTypeMapping TypeName="MODBModel.Performer">
+              <MappingFragment StoreEntitySet="Performer">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Projects">
+            <EntityTypeMapping TypeName="MODBModel.Project">
+              <MappingFragment StoreEntitySet="Project">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Deadline" ColumnName="Deadline" />
+                <ScalarProperty Name="PlannedBudget" ColumnName="PlannedBudget" />
+                <ScalarProperty Name="ActualBudget" ColumnName="ActualBudget" />
+                <ScalarProperty Name="idOrder" ColumnName="idOrder" />
+                <ScalarProperty Name="idStatus" ColumnName="idStatus" />
+                <ScalarProperty Name="idPerformer" ColumnName="idPerformer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tasks">
+            <EntityTypeMapping TypeName="MODBModel.Task">
+              <MappingFragment StoreEntitySet="Task">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Deadline" ColumnName="Deadline" />
+                <ScalarProperty Name="idStatus" ColumnName="idStatus" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaskPerformers">
+            <EntityTypeMapping TypeName="MODBModel.TaskPerformer">
+              <MappingFragment StoreEntitySet="TaskPerformers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="idTask" ColumnName="idTask" />
+                <ScalarProperty Name="idPerformer" ColumnName="idPerformer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TasksInTheProjects">
+            <EntityTypeMapping TypeName="MODBModel.TasksInTheProject">
+              <MappingFragment StoreEntitySet="TasksInTheProject">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="idProject" ColumnName="idProject" />
+                <ScalarProperty Name="idTask" ColumnName="idTask" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

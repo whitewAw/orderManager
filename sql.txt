@@ -1,0 +1,77 @@
+CREATE TABLE [dbo].[Order]
+(
+	[Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    	[Picture] NVARCHAR(256) NULL, 
+    	[Surname] NVARCHAR(32) NULL, 
+    	[Name] NVARCHAR(32) NOT NULL, 
+    	[Patronymic] NVARCHAR(32) NULL, 
+    	[Address] NVARCHAR(128) NULL
+)
+
+CREATE TABLE [dbo].[Performer]
+(
+	[Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    	[Picture] NVARCHAR(256) NULL, 
+    	[Surname] NVARCHAR(32) NULL, 
+    	[Name] NVARCHAR(32) NOT NULL, 
+    	[Patronymic] NVARCHAR(32) NULL, 
+    	[Contact] NVARCHAR(128) NULL
+)
+
+CREATE TABLE [dbo].[CompletionStatus] (
+    [Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    [Status] NVARCHAR (32) NOT NULL,
+);
+
+CREATE TABLE [dbo].[Task]
+(
+	[Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    	[Deadline] DATETIME2(0) NOT NULL, 
+    	[idStatus] INT NOT NULL,
+	constraint FK_Task_CompletionStatus foreign key (idStatus) references CompletionStatus(Id)on update cascade on delete cascade,
+    CONSTRAINT [FK_Project_Order] FOREIGN KEY ([idOrder]) REFERENCES [dbo].[Order] ([Id]) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+CREATE TABLE [dbo].[TaskPerformers]
+(
+	[Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    	[idTask] INT NOT NULL, 
+    	[idPerformer] INT NOT NULL,
+	constraint FK_TaskPerformers_Task foreign key (idTask) references Task(Id)on update cascade on delete cascade,
+	constraint FK_TaskPerformers_Performer foreign key (idPerformer) references Performer(Id)on update cascade on delete cascade
+)
+
+
+
+CREATE TABLE [dbo].[Project] (
+    [Id]            INT           NOT NULL,
+    [Name]          NVARCHAR (50) NOT NULL,
+    [Deadline]      DATETIME2 (0) NULL,
+    [PlannedBudget] INT           NULL,
+    [ActualBudget]  INT           NULL,
+    [idOrder]       INT           NOT NULL,
+    [idStatus]      INT           NOT NULL,
+    [idPerformer] INT NULL , 
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Project_CompletionStatus] FOREIGN KEY ([idStatus]) REFERENCES [dbo].[CompletionStatus] ([Id]) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT [FK_Project_Order] FOREIGN KEY ([idOrder]) REFERENCES [dbo].[Order] ([Id]) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT [FK_Project_Performer] FOREIGN KEY ([idPerformer]) REFERENCES Performer([Id]) ON DELETE CASCADE ON UPDATE CASCADE,
+);
+
+CREATE TABLE [dbo].[Project—ustomers]
+(
+	[Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	[idProject] INT NOT NULL, 
+    	[idOrder] INT NOT NULL,
+	constraint FK_Project—ustomers_Project foreign key (idProject) references Project(Id)on update cascade on delete cascade,
+	constraint FK_Project—ustomers_Order foreign key (idOrder) references [dbo].[Order](Id)on update cascade on delete cascade
+)
+
+CREATE TABLE [dbo].[TasksInTheProject]
+(
+	[Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	[idProject] INT NOT NULL, 
+    	[idTask] INT NOT NULL,
+	constraint FK_TasksInTheProject_Project foreign key (idProject) references Project(Id)on update cascade on delete cascade,
+	constraint FK_TasksInTheProject_Order foreign key (idTask) references Task(Id)
+)

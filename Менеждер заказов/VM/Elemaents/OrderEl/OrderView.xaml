@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="Менеждер_заказов.VM.Elemaents.OrderEl.OrderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Менеждер_заказов.VM.Elemaents.OrderEl"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <WrapPanel>
+                <TextBlock MinWidth="150"  Text="Фото: " VerticalAlignment="Center"/>
+                <Image Source="{Binding Picture}" Stretch="Fill" VerticalAlignment="Bottom" Width="120" />
+            </WrapPanel>
+            <WrapPanel>
+                <TextBlock MinWidth="150" Text="Фамилия: " VerticalAlignment="Center"/>
+                <TextBox MinWidth="200" Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged }" Width="120" />
+            </WrapPanel>
+            <WrapPanel>
+                <TextBlock MinWidth="150" Text="Имя: " VerticalAlignment="Center"/>
+                <TextBox MinWidth="200" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged }" Width="120" />
+            </WrapPanel>
+            <WrapPanel>
+                <TextBlock MinWidth="150" Text="Отчество: " VerticalAlignment="Center"/>
+                <TextBox MinWidth="200" Text="{Binding Patronymic, UpdateSourceTrigger=PropertyChanged }" Width="120" />
+            </WrapPanel>
+            <WrapPanel>
+                <TextBlock MinWidth="150" Text="Адресс: " VerticalAlignment="Center"/>
+                <TextBox MinWidth="200" Text="{Binding Address, UpdateSourceTrigger=PropertyChanged }" Width="120" />
+            </WrapPanel>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right"  Grid.Row="1" Orientation="Horizontal">
+            <Button x:Name="updateButton" Content="OK" Click="OkButton_Click" Margin="0 5 10 0" Width="60" />
+            <Button x:Name="deleteButton" Content="Отмена" Click="CancelButton_Click" Margin="0 5 10 0" Width="60"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
